@@ -1,0 +1,35 @@
+# Real CI for this lab. Runs on every push and pull request.
+# Acts as a required status check: it is the control plane's "execution gate"
+# that proves the agent's (or human's) change builds, tests, and type-checks
+# before it can merge.
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    name: Install, test, typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install --no-fund --no-audit
+
+      - name: Run tests
+        run: npm test
+
+      - name: Type check
+        run: npm run typecheck

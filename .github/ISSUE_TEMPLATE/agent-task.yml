@@ -1,0 +1,59 @@
+name: Agent task
+description: Define a unit of work for an autonomous agent to pick up via the control plane.
+title: "[agent-task]: "
+labels: ["agent:triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to hand a task to an agent. The triage agent reads the
+        title and the step list, turns them into a plan, and routes the work by
+        applying the right agent label. Be specific: an empty step list signals
+        that the task is not yet ready to dispatch.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: One line describing the outcome you want.
+      placeholder: Add a deterministic retry helper for flaky calls.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps
+      description: The discrete steps the agent should carry out, one per line.
+      value: |
+        - [ ] Write the failing test
+        - [ ] Implement the change
+        - [ ] Update the documentation
+    validations:
+      required: true
+  - type: dropdown
+    id: role
+    attributes:
+      label: Target agent role
+      description: Which agent role should own this work.
+      options:
+        - triage (let the control plane decide)
+        - implementation
+        - documentation
+        - review
+        - security
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: How a human reviewer will know the task is done correctly.
+    validations:
+      required: true
+  - type: checkboxes
+    id: governance
+    attributes:
+      label: Governance
+      options:
+        - label: This task may touch protected paths and so will need human approval.
+        - label: I have confirmed no secrets or credentials are described in this issue.
+          required: true

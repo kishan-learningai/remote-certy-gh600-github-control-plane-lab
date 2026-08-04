@@ -1,0 +1,57 @@
+# TEACHING EXAMPLE - agent triage workflow.
+#
+# In a live repository you would trigger this with:
+#
+#   on:
+#     issues:
+#       types: [opened, labeled]
+#
+# That makes GitHub the control plane: when an issue is opened or an
+# "agent:triage" label is applied, this workflow would dispatch the triage agent
+# to read the issue, propose a plan, and apply routing labels.
+#
+# It is gated to workflow_dispatch here so it never errors on push and never runs
+# automatically in the lab. It references labels and scripts that may not exist
+# at runtime; treat the steps as an illustration of the lifecycle, not a turnkey
+# pipeline.
+name: Agent triage (example)
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "Issue number to triage"
+        required: true
+        type: string
+
+# Least privilege: triage only needs to read code and write issue metadata.
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  triage:
+    name: Triage an issue with an agent
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install --no-fund --no-audit
+
+      # In a real pipeline this step would call the agent runner, which uses
+      # src/automation/issueToPlan.ts to turn the issue body into a plan and
+      # src/automation/labelRouter.ts to decide which agent role owns the work.
+      - name: Build a plan from the issue (illustrative)
+        run: echo "Would parse issue #${{ inputs.issue_number }} into a plan and apply routing labels."
+
+      # The agent would then post the proposed plan back to the issue as a
+      # comment so a human can supervise before any implementation begins.
+      - name: Comment the proposed plan (illustrative)
+        run: echo "Would comment the proposed plan on the issue for human review."

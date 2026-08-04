@@ -1,0 +1,26 @@
+# CODEOWNERS - example governance map for the GH-600 control plane.
+#
+# CODEOWNERS turns "who must review sensitive files" into a rule GitHub enforces.
+# Pair it with a branch protection rule that requires code-owner review, and an
+# autonomous agent can never merge a change to a protected path on its own: the
+# named owner (a human team) must approve first.
+#
+# Replace these example handles with real GitHub teams in your organisation.
+
+# Default owner for everything not matched below.
+*                       @CertyPro/maintainers
+
+# The control plane itself is the most sensitive area: workflows decide what
+# agents are allowed to run. Require platform owners to review any change here.
+/.github/               @CertyPro/platform-owners
+/.github/workflows/     @CertyPro/platform-owners
+
+# Agent automation logic governs routing and approval decisions.
+/src/automation/        @CertyPro/platform-owners @CertyPro/maintainers
+
+# Dependency manifests are a supply-chain risk surface.
+/package.json           @CertyPro/platform-owners
+/package-lock.json      @CertyPro/platform-owners
+
+# Documentation can be owned by a docs team.
+/docs/                  @CertyPro/docs-team

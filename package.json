@@ -1,0 +1,25 @@
+{
+  "name": "certy-gh600-github-control-plane-lab",
+  "version": "1.0.0",
+  "description": "Certy GH-600 GitHub Agentic AI Developer course lab: GitHub as the control plane for operating, supervising, and governing autonomous agents.",
+  "type": "module",
+  "scripts": {
+    "test": "node --import tsx --test \"tests/**/*.test.ts\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "certy",
+    "gh-600",
+    "github",
+    "agentic-ai",
+    "control-plane",
+    "automation"
+  ],
+  "author": "Certy (Coded Vision Design)",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

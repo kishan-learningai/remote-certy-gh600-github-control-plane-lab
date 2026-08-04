@@ -1,0 +1,49 @@
+# TEACHING EXAMPLE - human approval gate.
+#
+# In a live repository you would trigger this with:
+#
+#   on:
+#     pull_request_review:
+#       types: [submitted]
+#     pull_request:
+#       types: [labeled]
+#
+# This workflow enforces the governance line: an agent's pull request may not be
+# treated as approved until a human either submits an approving review or applies
+# an "approved-by-human" label. It is the gate that keeps a person in the loop
+# whenever src/automation/approvalCheck.ts decides approval is required.
+#
+# It is gated to workflow_dispatch so it never errors on push in the lab. The
+# logic shown is illustrative and may reference labels that do not exist yet.
+name: Human approval gate (example)
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "Pull request number awaiting approval"
+        required: true
+        type: string
+
+# Least privilege: this gate only needs to read PR state and set a status/label.
+permissions:
+  contents: read
+  pull-requests: write
+  statuses: write
+
+jobs:
+  approval-gate:
+    name: Verify a human approved the agent's work
+    runs-on: ubuntu-latest
+    steps:
+      # In a real pipeline this step would check for an approving human review
+      # or the "approved-by-human" label, and fail the gate if neither exists.
+      # Pairing this required check with a branch protection rule means an agent
+      # can never self-merge a change that needed human approval.
+      - name: Check for human approval (illustrative)
+        run: echo "Would verify a human approved PR #${{ inputs.pr_number }} before allowing merge."
+
+      # When approval is missing, the gate fails so the protected branch blocks
+      # the merge until a human acts.
+      - name: Block merge if unapproved (illustrative)
+        run: echo "Would fail this required check when human approval is absent."

@@ -1,0 +1,54 @@
+name: Bug report
+description: Report a defect so the control plane can route it for a fix.
+title: "[bug]: "
+labels: ["bug", "agent:triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Report a bug clearly enough that the triage agent can build a plan and
+        route it to the implementation agent. A human supervises before any fix
+        is merged.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: Describe the bug and the actual behaviour you observed.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What you expected to happen instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Minimal, ordered steps that reproduce the bug.
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      description: The version, tag, or commit SHA where you saw the bug.
+    validations:
+      required: false
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - low
+        - medium
+        - high
+        - critical
+    validations:
+      required: true

@@ -1,0 +1,57 @@
+# TEACHING EXAMPLE - agent review workflow.
+#
+# In a live repository you would trigger this with:
+#
+#   on:
+#     pull_request:
+#       types: [opened, synchronize, labeled]
+#
+# When a pull request opened by an implementation agent is labelled
+# "agent:review", this workflow would dispatch the review agent to inspect the
+# diff, run checks, and post a structured summary comment using
+# src/automation/prCommenter.ts.
+#
+# It is gated to workflow_dispatch so it stays inert in the lab. The steps are
+# illustrative and may reference scripts or labels that do not exist at runtime.
+name: Agent review (example)
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "Pull request number to review"
+        required: true
+        type: string
+
+# Least privilege: the review agent reads the code and writes a PR comment only.
+# It must NOT have permission to merge; merging stays behind human approval and
+# required status checks.
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    name: Review a pull request with an agent
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install --no-fund --no-audit
+
+      # The agent runner would evaluate the diff and decide, via
+      # src/automation/approvalCheck.ts, whether human approval is still needed.
+      - name: Evaluate the change (illustrative)
+        run: echo "Would review PR #${{ inputs.pr_number }} and compute the approval decision."
+
+      # The structured summary is posted as a PR comment so a human reviewer sees
+      # exactly what the agent did and whether approval is required.
+      - name: Post the agent summary comment (illustrative)
+        run: echo "Would format and post the agent summary comment on the PR."
